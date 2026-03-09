@@ -1,0 +1,17 @@
+services:
+  funasr:
+    image: likanwen/funasr-stt:latest
+    container_name: funasr-stt
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:2023:2023"
+    volumes:
+      - ~/.cache/modelscope:/root/.cache/modelscope
+      - ./config.toml:/app/config.toml:ro
+      - ./server.py:/app/server.py:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:2023/health')"]
+      interval: 30s
+      timeout: 5s
+      start_period: 180s
+      retries: 3

@@ -1,0 +1,30 @@
+[funasr]
+model = "iic/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-pytorch"
+punc_model = "iic/punc_ct-transformer_zh-cn-common-vocab272727-pytorch"
+vad_model = "iic/speech_fsmn_vad_zh-cn-16k-common-pytorch"
+device = "cpu"
+host = "0.0.0.0"
+port = 2023
+
+# To revert to SenseVoiceSmall, replace the above [funasr] section with:
+# [funasr]
+# model = "iic/SenseVoiceSmall"
+# punc_model = ""
+# vad_model = "iic/speech_fsmn_vad_zh-cn-16k-common-pytorch"
+# device = "cpu"
+# host = "0.0.0.0"
+# port = 2023
+
+[llm]
+enabled = true
+provider = "ollama"
+model = "qwen3.5:4b"
+base_url = "http://localhost:11434"
+timeout = 15.0
+
+[llm.prompt]
+system = """你是一个专业的语音转文字后处理助手。请对以下 ASR 转录文本进行润色：
+1. 修正中英文错别字（保持原意，不要改写）
+2. 添加合适的标点符号（逗号、句号、问号等）
+3. 合理断句
+只输出润色后的文本，不要添加任何解释。"""

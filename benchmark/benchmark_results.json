@@ -1,0 +1,371 @@
+{
+  "qwen3.5:2b": [
+    {
+      "id": "zh-typo",
+      "lang": "中文",
+      "desc": "错别字修正",
+      "input": "今天天气真好我们一起去哪里玩吧我想去公圆里面跑步然后去超市买些东西回家做饭",
+      "output": "今天天气真好，我们一起去哪里玩吧？我想去公园里面跑步，然后去超市买些东西，回家做饭。",
+      "latency": 0.8421423749969108,
+      "score": "3/3",
+      "passed": 3,
+      "total": 3
+    },
+    {
+      "id": "zh-punct",
+      "lang": "中文",
+      "desc": "标点符号与断句",
+      "input": "你好请问你今天有空吗我想和你一起去看电影如果你有空的话我们可以先吃个饭然后再去",
+      "output": "你好，请问你今天有空吗？我想和你一起去看电影。如果你有空的话，我们可以先吃个饭，然后再去。",
+      "latency": 0.6830632079945644,
+      "score": "3/3",
+      "passed": 3,
+      "total": 3
+    },
+    {
+      "id": "zh-multi",
+      "lang": "中文",
+      "desc": "多要点分解",
+      "input": "明天会议有三个议题第一个是讨论Q3销售数据第二个是审查新产品方案第三个是确认下季度预算",
+      "output": "明天会议有三个议题：一是讨论 Q3 销售数据；二是审查新产品方案；三是确认下季度预算。",
+      "latency": 0.6601760409976123,
+      "score": "1/4",
+      "passed": 1,
+      "total": 4
+    },
+    {
+      "id": "zh-question",
+      "lang": "中文",
+      "desc": "疑问句标点",
+      "input": "你知道这件事吗他们是什么时候来的为什么没有提前通知我",
+      "output": "你知道这件事吗？他们是什么时候来的？为什么没有提前通知我？",
+      "latency": 0.45351199999277014,
+      "score": "1/1",
+      "passed": 1,
+      "total": 1
+    },
+    {
+      "id": "en-typo",
+      "lang": "英文",
+      "desc": "英文错字修正",
+      "input": "i went to the store yesteday to bye some grocerys but the cashier maked a mistake with my chagne",
+      "output": "我今天去商店买了一些杂货，但收银员在计算我的更改时犯了错误。",
+      "latency": 0.5451097089971881,
+      "score": "0/6",
+      "passed": 0,
+      "total": 6
+    },
+    {
+      "id": "en-punct",
+      "lang": "英文",
+      "desc": "英文标点断句",
+      "input": "the meeting starts at nine oclock we need to prepare the slides review the budget and discuss the new hire process",
+      "output": "The meeting starts at nine o'clock. We need to prepare the slides, review the budget, and discuss the new hire process.",
+      "latency": 0.6934161669923924,
+      "score": "2/2",
+      "passed": 2,
+      "total": 2
+    },
+    {
+      "id": "en-multi",
+      "lang": "英文",
+      "desc": "英文多要点",
+      "input": "the project has three main goals first we need to increase user retention second we should reduce server costs third we want to launch the mobile app by q4",
+      "output": "该项目主要有三大目标：首先，我们需要提高用户留存率；其次，应降低服务器成本；最后，我们计划于第四季度推出移动应用。",
+      "latency": 0.7647186250105733,
+      "score": "0/4",
+      "passed": 0,
+      "total": 4
+    },
+    {
+      "id": "mixed-typo",
+      "lang": "中英混合",
+      "desc": "中英混合错字",
+      "input": "今天的metting开始了我们讨论了servr的perfonmance问题还有user的feedbak",
+      "output": "今天的 meeting 开始了，我们讨论了 server 的性能问题以及用户的反馈。",
+      "latency": 0.49740758299594745,
+      "score": "3/5",
+      "passed": 3,
+      "total": 5
+    },
+    {
+      "id": "mixed-punct",
+      "lang": "中英混合",
+      "desc": "中英混合标点",
+      "input": "我们需要优化API的response time目前平均是500ms这对用户体验很不好我们的target是100ms以内",
+      "output": "我们需要优化 API 的响应时间，目前平均为 500ms，这对用户体验很差，我们的目标是将响应时间控制在 100ms 以内。",
+      "latency": 0.8502016669954173,
+      "score": "2/2",
+      "passed": 2,
+      "total": 2
+    },
+    {
+      "id": "mixed-multi",
+      "lang": "中英混合",
+      "desc": "中英混合多要点",
+      "input": "这次sprint我们要完成三件事第一修复login的bug第二优化dashboard的loading速度第三写完unit test",
+      "output": "这次 sprint 我们要完成三件事：第一，修复 login 的 bug；第二，优化 dashboard 的 loading 速度；第三，写完 unit tests。",
+      "latency": 0.807996749994345,
+      "score": "4/4",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "id": "mixed-terms",
+      "lang": "中英混合",
+      "desc": "技术术语保留",
+      "input": "我们的kubernetes集群昨天出了点问题pod一直在crash loop里面restart了好几次最后发现是configmap配置写错了",
+      "output": "我们的 Kubernetes 集群昨天出了点问题，Pod 一直在 Crash Loop 中 Restart，好几次后才发现问题是 ConfigMap 配置写错了。",
+      "latency": 0.7438228329992853,
+      "score": "3/4",
+      "passed": 3,
+      "total": 4
+    }
+  ],
+  "qwen3.5:4b": [
+    {
+      "id": "zh-typo",
+      "lang": "中文",
+      "desc": "错别字修正",
+      "input": "今天天气真好我们一起去哪里玩吧我想去公圆里面跑步然后去超市买些东西回家做饭",
+      "output": "今天天气真好，我们去哪里玩吧？我想去公园里面跑步，然后去超市买些东西，回家做饭。",
+      "latency": 6.434791082996526,
+      "score": "3/3",
+      "passed": 3,
+      "total": 3
+    },
+    {
+      "id": "zh-punct",
+      "lang": "中文",
+      "desc": "标点符号与断句",
+      "input": "你好请问你今天有空吗我想和你一起去看电影如果你有空的话我们可以先吃个饭然后再去",
+      "output": "你好！请问你今天有空吗？我想和你一起去看电影。如果你有空的话，我们可以先吃个饭，然后再去。",
+      "latency": 1.167721083998913,
+      "score": "3/3",
+      "passed": 3,
+      "total": 3
+    },
+    {
+      "id": "zh-multi",
+      "lang": "中文",
+      "desc": "多要点分解",
+      "input": "明天会议有三个议题第一个是讨论Q3销售数据第二个是审查新产品方案第三个是确认下季度预算",
+      "output": "明天会议有三个议题：第一个是讨论 Q3 销售数据，第二个是审查新产品方案，第三个是确认下季度预算。",
+      "latency": 1.173894083010964,
+      "score": "4/4",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "id": "zh-question",
+      "lang": "中文",
+      "desc": "疑问句标点",
+      "input": "你知道这件事吗他们是什么时候来的为什么没有提前通知我",
+      "output": "你知道这件事吗？他们是什么时候来的？为什么没有提前通知我？",
+      "latency": 0.7601632500009146,
+      "score": "1/1",
+      "passed": 1,
+      "total": 1
+    },
+    {
+      "id": "en-typo",
+      "lang": "英文",
+      "desc": "英文错字修正",
+      "input": "i went to the store yesteday to bye some grocerys but the cashier maked a mistake with my chagne",
+      "output": "I went to the store yesterday to buy some groceries, but the cashier made a mistake with my change.",
+      "latency": 0.9991653339966433,
+      "score": "6/6",
+      "passed": 6,
+      "total": 6
+    },
+    {
+      "id": "en-punct",
+      "lang": "英文",
+      "desc": "英文标点断句",
+      "input": "the meeting starts at nine oclock we need to prepare the slides review the budget and discuss the new hire process",
+      "output": "The meeting starts at nine o'clock. We need to prepare the slides, review the budget, and discuss the new hire process.",
+      "latency": 1.1411901249957737,
+      "score": "2/2",
+      "passed": 2,
+      "total": 2
+    },
+    {
+      "id": "en-multi",
+      "lang": "英文",
+      "desc": "英文多要点",
+      "input": "the project has three main goals first we need to increase user retention second we should reduce server costs third we want to launch the mobile app by q4",
+      "output": "The project has three main goals: first, we need to increase user retention; second, we should reduce server costs; and third, we want to launch the mobile app by Q4.",
+      "latency": 1.4869611670001177,
+      "score": "4/4",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "id": "mixed-typo",
+      "lang": "中英混合",
+      "desc": "中英混合错字",
+      "input": "今天的metting开始了我们讨论了servr的perfonmance问题还有user的feedbak",
+      "output": "今天的 meeting 开始了，我们讨论了 server 的 performance 问题，还有 user 的 feedback。",
+      "latency": 0.9662583339959383,
+      "score": "5/5",
+      "passed": 5,
+      "total": 5
+    },
+    {
+      "id": "mixed-punct",
+      "lang": "中英混合",
+      "desc": "中英混合标点",
+      "input": "我们需要优化API的response time目前平均是500ms这对用户体验很不好我们的target是100ms以内",
+      "output": "我们需要优化 API 的响应时间（response time）。目前平均是 500ms，这对用户体验很不好；我们的目标是降到 100ms 以内。",
+      "latency": 1.4467169999988982,
+      "score": "2/2",
+      "passed": 2,
+      "total": 2
+    },
+    {
+      "id": "mixed-multi",
+      "lang": "中英混合",
+      "desc": "中英混合多要点",
+      "input": "这次sprint我们要完成三件事第一修复login的bug第二优化dashboard的loading速度第三写完unit test",
+      "output": "这次 Sprint 我们要完成三件事：第一，修复 login 的 bug；第二，优化 dashboard 的 loading 速度；第三，写完 unit test。",
+      "latency": 1.3203132500057109,
+      "score": "4/4",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "id": "mixed-terms",
+      "lang": "中英混合",
+      "desc": "技术术语保留",
+      "input": "我们的kubernetes集群昨天出了点问题pod一直在crash loop里面restart了好几次最后发现是configmap配置写错了",
+      "output": "我们的 Kubernetes 集群昨天出了点问题：Pod 一直在 crash loop 里重启，反复好几次。最后发现是 ConfigMap 的配置写错了。",
+      "latency": 1.2987193330045557,
+      "score": "4/4",
+      "passed": 4,
+      "total": 4
+    }
+  ],
+  "qwen3.5:9b": [
+    {
+      "id": "zh-typo",
+      "lang": "中文",
+      "desc": "错别字修正",
+      "input": "今天天气真好我们一起去哪里玩吧我想去公圆里面跑步然后去超市买些东西回家做饭",
+      "output": "今天天气真好，我们一起去哪里玩吧？我想去公园里跑步，然后去超市买些东西回家做饭。",
+      "latency": 9.213689832991804,
+      "score": "3/3",
+      "passed": 3,
+      "total": 3
+    },
+    {
+      "id": "zh-punct",
+      "lang": "中文",
+      "desc": "标点符号与断句",
+      "input": "你好请问你今天有空吗我想和你一起去看电影如果你有空的话我们可以先吃个饭然后再去",
+      "output": "你好，请问你今天有空吗？我想和你一起去看电影。如果你有空的话，我们可以先吃个饭，然后再去。",
+      "latency": 1.5145957920030924,
+      "score": "3/3",
+      "passed": 3,
+      "total": 3
+    },
+    {
+      "id": "zh-multi",
+      "lang": "中文",
+      "desc": "多要点分解",
+      "input": "明天会议有三个议题第一个是讨论Q3销售数据第二个是审查新产品方案第三个是确认下季度预算",
+      "output": "明天会议有三个议题：第一个是讨论 Q3 销售数据，第二个是审查新产品方案，第三个是确认下季度预算。",
+      "latency": 1.5432839169952786,
+      "score": "4/4",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "id": "zh-question",
+      "lang": "中文",
+      "desc": "疑问句标点",
+      "input": "你知道这件事吗他们是什么时候来的为什么没有提前通知我",
+      "output": "你知道这件事吗？他们是什么时候来的？为什么没有提前通知我？",
+      "latency": 1.018084583003656,
+      "score": "1/1",
+      "passed": 1,
+      "total": 1
+    },
+    {
+      "id": "en-typo",
+      "lang": "英文",
+      "desc": "英文错字修正",
+      "input": "i went to the store yesteday to bye some grocerys but the cashier maked a mistake with my chagne",
+      "output": "I went to the store yesterday to buy some groceries, but the cashier made a mistake with my change.",
+      "latency": 1.3115896669914946,
+      "score": "6/6",
+      "passed": 6,
+      "total": 6
+    },
+    {
+      "id": "en-punct",
+      "lang": "英文",
+      "desc": "英文标点断句",
+      "input": "the meeting starts at nine oclock we need to prepare the slides review the budget and discuss the new hire process",
+      "output": "The meeting starts at nine o'clock. We need to prepare the slides, review the budget, and discuss the new hire process.",
+      "latency": 1.5076136249990668,
+      "score": "2/2",
+      "passed": 2,
+      "total": 2
+    },
+    {
+      "id": "en-multi",
+      "lang": "英文",
+      "desc": "英文多要点",
+      "input": "the project has three main goals first we need to increase user retention second we should reduce server costs third we want to launch the mobile app by q4",
+      "output": "The project has three main goals: first, we need to increase user retention; second, we should reduce server costs; third, we want to launch the mobile app by Q4.",
+      "latency": 1.9231594579905504,
+      "score": "4/4",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "id": "mixed-typo",
+      "lang": "中英混合",
+      "desc": "中英混合错字",
+      "input": "今天的metting开始了我们讨论了servr的perfonmance问题还有user的feedbak",
+      "output": "今天的 meeting 开始了，我们讨论了 server 的 performance 问题，还有 user 的 feedback。",
+      "latency": 1.2792539170040982,
+      "score": "5/5",
+      "passed": 5,
+      "total": 5
+    },
+    {
+      "id": "mixed-punct",
+      "lang": "中英混合",
+      "desc": "中英混合标点",
+      "input": "我们需要优化API的response time目前平均是500ms这对用户体验很不好我们的target是100ms以内",
+      "output": "我们需要优化 API 的 response time。目前平均是 500ms，这对用户体验很不好。我们的 target 是 100ms 以内。",
+      "latency": 1.7986317910108482,
+      "score": "2/2",
+      "passed": 2,
+      "total": 2
+    },
+    {
+      "id": "mixed-multi",
+      "lang": "中英混合",
+      "desc": "中英混合多要点",
+      "input": "这次sprint我们要完成三件事第一修复login的bug第二优化dashboard的loading速度第三写完unit test",
+      "output": "这次 Sprint 我们要完成三件事：第一，修复 login 的 bug；第二，优化 dashboard 的 loading 速度；第三，写完 unit test。",
+      "latency": 1.7182994580070954,
+      "score": "4/4",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "id": "mixed-terms",
+      "lang": "中英混合",
+      "desc": "技术术语保留",
+      "input": "我们的kubernetes集群昨天出了点问题pod一直在crash loop里面restart了好几次最后发现是configmap配置写错了",
+      "output": "我们的 Kubernetes 集群昨天出了点问题：Pod 一直在 Crash Loop 中重启了好几次，最后发现是 ConfigMap 配置写错了。",
+      "latency": 1.6506144580052933,
+      "score": "3/4",
+      "passed": 3,
+      "total": 4
+    }
+  ]
+}
