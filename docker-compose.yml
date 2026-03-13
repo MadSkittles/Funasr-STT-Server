@@ -3,6 +3,8 @@ services:
     image: likanwen/funasr-stt:latest
     container_name: funasr-stt
     restart: unless-stopped
+    environment:
+      - AZURE_SPEECH_KEY=${AZURE_SPEECH_KEY}
     ports:
       - "127.0.0.1:2023:2023"
     volumes:

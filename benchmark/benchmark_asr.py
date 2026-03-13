@@ -11,91 +11,18 @@ and compares the result against ground truth using Character Error Rate (CER).
 """
 
 import os
-import sys
 import json
 import time
-import unicodedata
 
 import httpx
+
+from benchmark_common import compute_cer, discover_tests
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
 STT_URL = "http://127.0.0.1:2023/v1/audio/transcriptions"
 TEST_DIR = os.path.join(os.path.dirname(__file__), "test_audio")
 RESULTS_FILE = os.path.join(os.path.dirname(__file__), "benchmark_asr_results.json")
-
-
-# ── CER calculation ──────────────────────────────────────────────────────────
-
-def _normalize(text: str) -> str:
-    """Normalize text for CER: remove punctuation and whitespace, lowercase."""
-    out = []
-    for ch in unicodedata.normalize("NFKC", text):
-        cat = unicodedata.category(ch)
-        if cat.startswith("P") or cat.startswith("Z") or cat.startswith("C"):
-            continue
-        out.append(ch.lower())
-    return "".join(out)
-
-
-def _edit_distance(ref: str, hyp: str) -> int:
-    """Levenshtein distance at character level."""
-    n, m = len(ref), len(hyp)
-    dp = list(range(m + 1))
-    for i in range(1, n + 1):
-        prev = dp[0]
-        dp[0] = i
-        for j in range(1, m + 1):
-            temp = dp[j]
-            if ref[i - 1] == hyp[j - 1]:
-                dp[j] = prev
-            else:
-                dp[j] = 1 + min(prev, dp[j], dp[j - 1])
-            prev = temp
-    return dp[m]
-
-
-def compute_cer(reference: str, hypothesis: str) -> float:
-    """Character Error Rate: edit_distance(ref, hyp) / len(ref)."""
-    ref = _normalize(reference)
-    hyp = _normalize(hypothesis)
-    if not ref:
-        return 0.0 if not hyp else 1.0
-    return _edit_distance(ref, hyp) / len(ref)
-
-
-# ── Test discovery ───────────────────────────────────────────────────────────
-
-def discover_tests() -> list[dict]:
-    """Find paired .wav + .txt files in test_audio/."""
-    if not os.path.isdir(TEST_DIR):
-        print(f"Error: test directory not found: {TEST_DIR}")
-        print("Create test_audio/ with .wav files and matching .txt ground truth files.")
-        sys.exit(1)
-
-    tests = []
-    for fname in sorted(os.listdir(TEST_DIR)):
-        if not fname.lower().endswith((".wav", ".mp3", ".flac", ".m4a", ".ogg")):
-            continue
-        base = os.path.splitext(fname)[0]
-        audio_path = os.path.join(TEST_DIR, fname)
-        txt_path = os.path.join(TEST_DIR, base + ".txt")
-        if not os.path.exists(txt_path):
-            print(f"Warning: no ground truth for {fname}, skipping")
-            continue
-        with open(txt_path, encoding="utf-8") as f:
-            ground_truth = f.read().strip()
-        tests.append({
-            "name": base,
-            "audio_path": audio_path,
-            "ground_truth": ground_truth,
-        })
-
-    if not tests:
-        print("Error: no test cases found. Need .wav + .txt pairs in test_audio/")
-        sys.exit(1)
-
-    return tests
 
 
 # ── Run benchmark ────────────────────────────────────────────────────────────
@@ -154,7 +81,7 @@ def run_benchmark(tests: list[dict]) -> list[dict]:
 
 def main():
     print("Discovering test cases...")
-    tests = discover_tests()
+    tests = discover_tests(TEST_DIR)
     print(f"Found {len(tests)} test case(s)\n")
 
     # Get server info
@@ -164,7 +91,7 @@ def main():
         punc_name = health.get("punc_model", "")
     except Exception as e:
         print(f"Error: cannot reach STT server at 127.0.0.1:2023 — {e}")
-        sys.exit(1)
+        raise SystemExit(1)
 
     print(f"Model: {model_name}")
     if punc_name:

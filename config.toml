@@ -15,8 +15,13 @@ port = 2023
 # host = "0.0.0.0"
 # port = 2023
 
-[llm]
+[azure]
 enabled = true
+region = "japaneast"
+key_env = "AZURE_SPEECH_KEY"   # 环境变量名，运行时读取 os.environ[key_env]
+
+[llm]
+enabled = false
 provider = "ollama"
 model = "qwen3.5:4b"
 base_url = "http://localhost:11434"

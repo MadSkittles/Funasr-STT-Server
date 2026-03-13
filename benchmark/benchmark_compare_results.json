@@ -1,0 +1,65 @@
+{
+  "funasr": {
+    "results": [
+      {
+        "name": "long_mixed",
+        "ground_truth": "上周我们做了一次code review，发现了几个比较严重的issue。首先是memory leak的问题，在处理large file upload的时候，buffer没有properly release，导致server的memory usage持续增长。第二个问题是authentication模块的bug，用户的access token过期之后，refresh token的logic有race condition，在high concurrency的情况下会出现401 error。我已经在Jira上创建了两个ticket，priority都设成了critical。今天下午3点我们开个meeting讨论一下fix的方案，你看看calendar有没有空。",
+        "hypothesis": "上周我们做了一次code review,发现了几个比较严重的。也许首先是memory leink的问题，在处理large file upload的时候，buffer没有properly release导致server的memory ussage持续增长。第二个问题是authenication模块的bug用户的access token.过期之后，refreshtoken的logic有raise condition在high concurrency的情况下出现四零一l我们已经在GR上创建了两个ticket priyority都设成了critical.今天下午三点，我们开个meeting讨论一下fix方案案，看看看enenar有没有空。",
+        "cer": 0.1046,
+        "latency": 3.334
+      },
+      {
+        "name": "medium_mixed",
+        "ground_truth": "这个project的backend用的是Python FastAPI框架，database选了PostgreSQL。我们需要在Docker container里面部署，然后用Nginx做reverse proxy。performance方面，目前API的response time大概在200毫秒左右。",
+        "hypothesis": "第一个project的backhand用的是python first api框架database选选的POSTGREE ircle我们需要在多个container里面部署，然后用engines做reverse proxy vom sming.目前API的response time大概在两百毫秒左右。",
+        "cer": 0.2553,
+        "latency": 1.976
+      },
+      {
+        "name": "short_mixed",
+        "ground_truth": "我昨天在GitHub上提交了一个pull request，review一下吧。",
+        "hypothesis": "我昨天在github上提交了一个per request, review一下吧。",
+        "cer": 0.0833,
+        "latency": 1.236
+      }
+    ],
+    "summary": {
+      "avg_cer": 0.1477,
+      "avg_latency": 2.182,
+      "ok": 3,
+      "errors": 0
+    }
+  },
+  "azure": {
+    "region": "japaneast",
+    "results": [
+      {
+        "name": "long_mixed",
+        "ground_truth": "上周我们做了一次code review，发现了几个比较严重的issue。首先是memory leak的问题，在处理large file upload的时候，buffer没有properly release，导致server的memory usage持续增长。第二个问题是authentication模块的bug，用户的access token过期之后，refresh token的logic有race condition，在high concurrency的情况下会出现401 error。我已经在Jira上创建了两个ticket，priority都设成了critical。今天下午3点我们开个meeting讨论一下fix的方案，你看看calendar有没有空。",
+        "hypothesis": "上周我们做了一次code review ，发现了几个比较严重的issue 。首先是memory leak的问题，在处理large file upload的时候buffer没有properly release ，导致server的memory usage持续增长。第二个问题是authentication模块的bug ，用户的access token过期之后，refresh token的logic有race condition ，在high concurrency的情况下出现401 error 。 我们已经在GR上创建了两个ticket ，priority都设成了critical 。今天下午三点，我们开个meeting讨论一下fix方案，你看看calendar有没有空。",
+        "cer": 0.0229,
+        "latency": 5.246
+      },
+      {
+        "name": "medium_mixed",
+        "ground_truth": "这个project的backend用的是Python FastAPI框架，database选了PostgreSQL。我们需要在Docker container里面部署，然后用Nginx做reverse proxy。performance方面，目前API的response time大概在200毫秒左右。",
+        "hypothesis": "这一个project的backend用的是Python fast API框架，database选的是post gray circle ，我们需要在多个container里面部署，然后用engines做reverse proxy performance方面，目前API的response time大概在200毫秒左右。",
+        "cer": 0.1348,
+        "latency": 7.336
+      },
+      {
+        "name": "short_mixed",
+        "ground_truth": "我昨天在GitHub上提交了一个pull request，review一下吧。",
+        "hypothesis": "我昨天在GitHub上提交了一个pull request ，review一下吧。",
+        "cer": 0.0,
+        "latency": 1.45
+      }
+    ],
+    "summary": {
+      "avg_cer": 0.0526,
+      "avg_latency": 4.677,
+      "ok": 3,
+      "errors": 0
+    }
+  }
+}

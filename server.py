@@ -9,9 +9,12 @@ Compatible with VoiceMode MCP and OpenAI Python SDK.
 """
 
 import os
+import json
+import subprocess
 import tomllib
 import tempfile
 import logging
+from datetime import date
 
 import httpx
 import uvicorn
@@ -22,6 +25,13 @@ from funasr.utils.postprocess_utils import rich_transcription_postprocess
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("funasr-server")
+logger.setLevel(logging.INFO)
+if not logger.handlers:
+    _handler = logging.StreamHandler()
+    _handler.setLevel(logging.INFO)
+    _handler.setFormatter(logging.Formatter("%(levelname)s:%(name)s:%(message)s"))
+    logger.addHandler(_handler)
+    logger.propagate = False
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -36,8 +46,13 @@ _DEFAULTS = {
         "host": "0.0.0.0",
         "port": 2023,
     },
+    "azure": {
+        "enabled": False,
+        "region": "japaneast",
+        "key_env": "AZURE_SPEECH_KEY",
+    },
     "llm": {
-        "enabled": True,
+        "enabled": False,
         "model": "qwen3.5:4b",
         "base_url": "http://localhost:11434",
         "timeout": 15.0,
@@ -79,6 +94,12 @@ def load_config() -> dict:
 cfg = load_config()
 funasr_cfg = cfg["funasr"]
 llm_cfg = cfg["llm"]
+azure_cfg = cfg["azure"]
+azure_key = os.environ.get(azure_cfg["key_env"], "") if azure_cfg["enabled"] else ""
+
+# Tracks the date (YYYY-MM-DD) when Azure was degraded due to quota errors.
+# Reset on container restart or when a new day begins.
+_azure_degraded_date: str | None = None
 
 # ── App ───────────────────────────────────────────────────────────────────────
 
@@ -127,6 +148,97 @@ def get_model():
     return model
 
 
+def _to_wav_bytes(audio_data: bytes, suffix: str) -> bytes:
+    """Convert audio to 16kHz mono PCM WAV via ffmpeg. Returns wav bytes."""
+    if suffix.lower() == ".wav":
+        return audio_data
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as src:
+        src.write(audio_data)
+        src_path = src.name
+    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as dst:
+        dst_path = dst.name
+    try:
+        subprocess.run(
+            ["ffmpeg", "-y", "-i", src_path, "-ar", "16000", "-ac", "1", "-f", "wav", dst_path],
+            capture_output=True, check=True,
+        )
+        with open(dst_path, "rb") as f:
+            return f.read()
+    finally:
+        os.unlink(src_path)
+        os.unlink(dst_path)
+
+
+def _today_str() -> str:
+    """Return today's date string in UTC+8 (Asia/Shanghai)."""
+    return date.today().isoformat()
+
+
+async def transcribe_azure(audio_data: bytes, suffix: str) -> str | None:
+    """Try Azure Fast Transcription. Returns text on success, None on failure/skip."""
+    global _azure_degraded_date
+
+    if not azure_cfg["enabled"] or not azure_key:
+        return None
+
+    today = _today_str()
+    if _azure_degraded_date == today:
+        return None
+
+    try:
+        wav_data = _to_wav_bytes(audio_data, suffix)
+    except Exception as e:
+        logger.warning("ffmpeg WAV conversion failed, falling back to FunASR: %s", e)
+        return None
+
+    url = (
+        f"https://{azure_cfg['region']}.api.cognitive.microsoft.com"
+        "/speechtotext/transcriptions:transcribe?api-version=2025-10-15"
+    )
+    definition = json.dumps({"locales": ["zh-CN"]})
+
+    try:
+        async with httpx.AsyncClient(timeout=120.0) as client:
+            resp = await client.post(
+                url,
+                headers={
+                    "Ocp-Apim-Subscription-Key": azure_key,
+                    "Accept": "application/json",
+                },
+                files={"audio": ("audio.wav", wav_data, "audio/wav")},
+                data={"definition": definition},
+            )
+
+        if resp.status_code in (429, 403):
+            _azure_degraded_date = today
+            logger.warning(
+                "Azure quota exceeded (HTTP %d), degrading to FunASR for today (%s)",
+                resp.status_code, today,
+            )
+            return None
+
+        resp.raise_for_status()
+
+        combined = resp.json().get("combinedPhrases", [])
+        text = combined[0].get("text", "") if combined else ""
+        logger.info("Azure transcription succeeded (%d chars), skipping FunASR", len(text))
+        return text
+
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code in (429, 403):
+            _azure_degraded_date = today
+            logger.warning(
+                "Azure quota exceeded (HTTP %d), degrading to FunASR for today (%s)",
+                e.response.status_code, today,
+            )
+        else:
+            logger.warning("Azure transcription failed (HTTP %d), falling back to FunASR", e.response.status_code)
+        return None
+    except Exception as e:
+        logger.warning("Azure transcription failed, falling back to FunASR: %s", e)
+        return None
+
+
 async def polish_text(text: str) -> str:
     """Call local Ollama to polish ASR output. Falls back to raw text on failure."""
     if not llm_cfg["enabled"] or not text:
@@ -164,6 +276,8 @@ async def health():
     info = {"status": "ok", "model": funasr_cfg["model"]}
     if funasr_cfg.get("punc_model"):
         info["punc_model"] = funasr_cfg["punc_model"]
+    info["azure_enabled"] = azure_cfg["enabled"] and bool(azure_key)
+    info["azure_degraded"] = _azure_degraded_date == _today_str() if _azure_degraded_date else False
     return info
 
 
@@ -191,6 +305,15 @@ async def transcribe(
         tmp_path = tmp.name
 
     try:
+        # Try Azure first (if enabled and not degraded)
+        azure_text = await transcribe_azure(audio_data, suffix)
+        if azure_text is not None:
+            text = await polish_text(azure_text)
+            if response_format == "text":
+                return PlainTextResponse(text)
+            return JSONResponse({"text": text})
+
+        # Fall back to local FunASR
         asr_model = get_model()
         res = asr_model.generate(
             input=tmp_path,

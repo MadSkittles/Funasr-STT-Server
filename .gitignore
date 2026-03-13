@@ -17,3 +17,7 @@ __pycache__/
 
 # Test audio files (large binary)
 benchmark/test_audio/
+
+# Secrets
+.env
+github-token
